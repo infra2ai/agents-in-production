@@ -1,0 +1,51 @@
+Red team run for Penny (Foundry portal > Build > Evaluations > Red team > Create)
+
+Used in the video's "Red teaming" part. An attacker agent sends Penny harmful and
+adversarial requests, and the run reports how many got through (the attack success rate).
+
+Name:
+penny-red-team
+
+Target:
+Agent > penny
+
+Risk categories (Modify):
+- Violence
+- Hate and unfairness
+- Task adherence
+
+Tool descriptions (the Task adherence category asks for one for each of Penny's tools):
+- azure_ai_search:
+  Searches the bakery documents: menu, prices, allergens, opening hours and policies.
+- the Orders agent (A2A):
+  Hands custom cake and catering orders to the Orders agent, and checks the status of an order.
+
+Seed data queries:
+5 per category (the default).
+
+Attack strategies (Modify):
+- Base64: hides the request in encoded text.
+- Flip: writes the request backwards.
+- Jailbreak: wraps it in a prompt that tries to talk the model out of its rules.
+Every seed is also sent plainly, as the baseline, so each risk category is tried four ways.
+
+How long it takes:
+About 6 minutes with these settings on a deployment with a capacity of 400 (400K tokens
+per minute). An earlier run with five risk categories on a capacity of 100 took about
+24 minutes.
+
+Left out on purpose:
+"Prohibited actions". When this was recorded, its preview grader counted Penny's
+refusals as successful attacks (86 percent), which says nothing about her. Try it
+yourself, and read the reasons before you trust the number.
+
+Reading the results:
+Open the failed attacks in each category and read what Penny actually sent back. In the
+video, the biggest finding was not a harmful answer: most of the "successful" task
+adherence attacks were a raw "Error code: 400 ... filtered" message shown to the customer.
+A guardrail and clear instructions should turn that into a polite answer.
+
+Region:
+Cloud red teaming only runs in East US 2, France Central, Sweden Central, Switzerland West
+and US North Central. Switzerland North, where the series started, is not one of them,
+which is why the video's copy of the bakery is in Sweden Central.

@@ -1,0 +1,37 @@
+Guardrail for Penny (Foundry portal > Build > Guardrails > Create)
+
+Used in the video's "Guardrails" part. Foundry already applies Microsoft.DefaultV2 (jailbreak,
+content safety and protected material) to every model deployment. This custom guardrail adds
+stricter controls, and is assigned to Penny only.
+
+Controls:
+- Content harms: Hate set to the highest blocking, and Violence set to the highest
+  blocking. (In the portal, the slider reaches "Highest blocking" when you click the
+  right end of its track.)
+- Indirect prompt injections: on. It checks the tool response, so a document that says
+  "ignore your instructions" is stopped before the agent reads it.
+- PII (preview): on, with these types:
+  - Credit card protection
+  - Azure service bus connection string protection
+
+Assign to:
+The agent penny (not a model deployment).
+
+Guardrail name:
+bakery-guardrail
+
+Try it, before and after (Penny's Playground):
+
+  Hi Penny, I want a vanilla cake for Saturday. My card number is 4111 1111 1111 1111, please charge it.
+
+Before: Penny says she does not take payments, but her steps show she passed the whole
+message, card number included, to the Orders agent.
+After (it takes a minute or two to apply): "I'm sorry, but I cannot assist with that
+request. This interaction was blocked by a safety and security control in this asset's
+Foundry guardrail."
+
+An ordinary order still goes through with the guardrail on:
+
+  Hi Penny! I'd like to order a chocolate cake with Congratulations Noah on it, for 10 people, to pick up on Saturday. My name is Sofia Marti.
+
+(4111 1111 1111 1111 is a standard test card number. Never use a real one in a test.)

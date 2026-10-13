@@ -1,0 +1,39 @@
+Monitoring, an alert and a budget
+
+Used in the video's "Monitoring" and "What it costs" parts.
+
+1. Application Insights for the Function App (Azure portal > the Function App)
+   The Function App was created without Application Insights in part 3. Turn it on:
+   Enable Application Insights > Turn on Application Insights > Select existing
+   resource > appi-bluepenguin (the one the Foundry traces already use) > Apply > Yes.
+   From then on, one order is a single end-to-end trace in Application Insights:
+   PlaceOrder, the Service Bus queue, and KitchenTaskReceiver.
+
+2. Evaluation alerts (Foundry portal > the agent > Monitor > Settings)
+   - If a "Setup incomplete" banner shows, click Resolve: it lets the project read
+     Application Insights (Monitoring Reader) and the agent's runs (Foundry User).
+   - Evaluation Alerts: on, pass rate 80 percent, look back 6 hours, Submit.
+     This creates an Azure Monitor alert rule named evalpassrate-...
+   - Recurring evaluations score a sample of live conversations on a schedule.
+
+3. An alert on the dead-letter queue (Azure portal > the Service Bus namespace > Alerts > Create alert rule)
+   Signal:     Count of dead-lettered messages in a Queue/Topic
+   Condition:  Static, Average, Greater than 0, checked every 1 minute over 5 minutes
+               (Azure suggests exactly these)
+   Actions:    Use quick actions > an action group name (ag-bakery-ops), a display
+               name, and an email address (it defaults to the signed-in account)
+   Details:    Severity 1 - Error. Rule name: kitchen-orders-dead-lettered
+   Test it:    send a message that is not an order (plain text, not JSON) to the
+               kitchen-tasks queue, for example from the queue's Service Bus Explorer
+               ("Send messages"). KitchenTaskReceiver cannot read it, so after its
+               delivery attempts the message moves to the dead-letter queue, and the
+               alert fires a few minutes later.
+
+4. A budget (Azure portal > the resource group > Cost Management > Budgets > Add)
+   Name:       bakery-monthly
+   Reset:      every billing month
+   Amount:     500 (in your billing currency; use less for a demo of your own)
+   Alert:      Actual cost, 80 percent of the budget
+   Email:      whoever pays the bill (the video uses kitchen-ops@bluepenguin.example)
+   Azure checks the spending a few times a day, so a new budget shows its first
+   numbers after a few hours.

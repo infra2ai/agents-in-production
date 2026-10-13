@@ -1,0 +1,47 @@
+Evaluation of the three agents (Foundry portal > Build > Evaluations > Create)
+
+Used in the video's "Evaluations" part. One evaluation, three runs: Penny, the Orders
+agent and the Kitchen agent, each scored on the same kind of questions.
+
+Evaluation name:
+bakery-baseline
+
+Target:
+Agent > penny (the first run). The Orders agent and the Kitchen agent are added as
+two more runs of the same evaluation ("Add run").
+
+Scope:
+Individual turns
+
+Frequency:
+One time
+
+Data:
+Synthetic generation, 15 rows (the minimum), with this prompt:
+
+  Questions a customer would ask the bakery about opening hours, prices, allergens,
+  custom cakes, catering, delivery, gift cards and the loyalty program. Include two
+  questions that have nothing to do with the bakery, and three where the customer
+  gives a full order: name, cake, number of people and pickup day.
+
+Criteria:
+The evaluators Foundry suggests for an agent (22 at the time of recording: agent
+evaluators such as intent resolution, task adherence and tool call accuracy, quality
+evaluators such as relevance, groundedness and fluency, and safety evaluators), with a
+judge model deployment (gpt-4.1-mini here).
+
+After the run:
+- Open the results: the score for each evaluator, then each question with its answer
+  and the judge's reason.
+- "Analyze Results" groups what went wrong into clusters, using an analysis model.
+  Read the reasons yourself first, then use it to see the patterns.
+
+What to expect:
+- A run takes about 7 to 12 minutes for 15 questions.
+- Scores differ from run to run: the questions are generated each time.
+- Some tool evaluators (tool input accuracy, tool call accuracy) can flag Penny's
+  search calls even when the answer is right. The built-in Azure AI Search tool
+  describes its parameter as `input`, and the agent sends `query`. When the judge's
+  reason is only about parameter names, it is noise, not a bug in your agent.
+- It needs enough model capacity: the video's gpt-4.1-mini deployment has a capacity of
+  400 (400K tokens per minute). With 100, runs can be throttled and time out.
